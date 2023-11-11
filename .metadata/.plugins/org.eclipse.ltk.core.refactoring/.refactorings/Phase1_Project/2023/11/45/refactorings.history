@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;Phase1_Project/Phase1_Project.ioc&apos; to &apos;GPIOconfig.ioc&apos;" description="Rename resource &apos;Phase1_Project.ioc&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Phase1_Project.ioc" name="GPIOconfig.ioc" stamp="1699310682737" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;Phase1_Project/Phase1_Project.ioc&apos; to &apos;GPIOconfig.ioc&apos;" description="Rename resource &apos;Phase1_Project.ioc&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Phase1_Project.ioc" name="GPIOconfig.ioc" stamp="1699310765192" updateReferences="true"/>
+</session>

@@ -1,0 +1,87 @@
+/*
+ * CortexM4_Core_SysTick.c
+ *
+ *  Created on: Nov 11, 2023
+ *      Author: Mohamed ALfateh
+ */
+#include <"CortexM4_Core_SysTick.h">
+#include <"CortexM4_Core_SysTick_Cfg.h">
+
+
+
+
+
+
+
+
+unit32_t SysTick_Init(unit32_t SysTick_Ticks)
+{
+	uint32_t RetVal =0;
+	if (SysTick_Ticks > SysTick_LOAD_RELOAD_MSK){
+		RetVal =1;
+	}
+	else{
+		/*Disable SysTick Counter*/
+		CLEAR_BIT(SysTick->CTRL, SysTick_CTRL_ENABLE_MSK);
+		/*Set Reload Register to SysTick_Ticks*/
+		SysTick->LOAD = SysTick_Ticks;
+		/*Reset the SysTick Counter Value*/
+		SysTick->VAL = 0;
+		/* Select the Processor Clock*/
+#if (SYSTICK_CLOCK_SOURCE == SYSTICK_CLOCK_SOURCE_DIV_1)
+	SET_BIT(SysTick->CTRL, Systick_CTRL_CLKSOURCE_MSK);
+#elif SYSTICK_CLOCK_SOURCE == SYSTICK_CLOCK_SOURCE_DIV_8)
+	CLEAR_BIT(SysTick->CTRL, SysTick_CTRL_CLKSOURCE_MSK);
+#else
+#error "Invalid Clock Source"
+#endif
+		/*Disable SysTick IRQ*/
+		CLEAR_BIT(SysTick->CTRL, SysTick_CTRL_TICKINT_MSK);
+		RetVal = 0;
+	}
+	return RetVal;
+}
+
+
+
+void SysTick_DeInit(void)
+{
+	/*Disable SysTick Counter*/
+	CLEAR_BIT(SysTick->CTRL, SysTick_CTRL_ENABLE_MSK);
+	/*Set Reload Register to SysTick_Ticks*/
+	SysTick->LOAD = 0;
+	/*Reset the SysTick Counter Value*/
+	SysTick->VAL = 0;
+	/*Disable SysTick IRQ*/
+	CLEAR_BIT(SysTick->CTRL, SysTick_CTRL_TICKINT_MSK);
+}
+
+
+void SysTick_WaitBlocking(unit32_t SysTick_Ticks) // delay function
+{
+	/*Set Reload Register to SysTick_Ticks*/
+	SysTick->LOAD = SysTick_Ticks;
+	/*Enable SysTick Counter*/
+	SET_BIT(SysTick->CTRL, SysTick_CTRL_ENABLE_MSK);
+	/*Wait the COUNTFLAG Return 1*/
+	while(READ_BIT(SysTick->CTRL, ysTick_CTRL_COUNTFLAG_MSK) == 0); // in order to use read_bit, go to common macros and add READ_BIT command below set clear and toggle
+	/*Disable SysTick counter*/
+	CLEAR_BIT(SysTick->CTRL, SysTick_CTRL_ENABLE_MSK);
+	/*Reset the SysTick Reload Register*/
+	SysTick->LOAD = 0;
+	/*Reset the SysTick counter value*/
+	SysTick->VAL = 0;
+
+}
+
+unit32_t SysTick_GetRemainingTicks(void)
+{
+	uint32_t RemainingTicks =0;
+	/*Copy The SysTick counter register to a local variable*/
+	RemainingTicks= SysTick->VAL;
+	/*Return the local variable*/
+	return RemainingTicks;
+
+
+}
+
